@@ -1,0 +1,98 @@
+Model: "model_1"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            (None, 230)          0                                            
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 230)          0                                            
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 230, 300)     10008000    input_1[0][0]                    
+                                                                 input_2[0][0]                    
+__________________________________________________________________________________________________
+time_distributed_1 (TimeDistrib (None, 230, 300)     90300       embedding_1[0][0]                
+                                                                 embedding_1[1][0]                
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 230, 600)     1442400     time_distributed_1[0][0]         
+                                                                 time_distributed_1[1][0]         
+__________________________________________________________________________________________________
+batch_normalization_1 (BatchNor (None, 230, 600)     2400        bidirectional_1[0][0]            
+__________________________________________________________________________________________________
+batch_normalization_2 (BatchNor (None, 230, 600)     2400        bidirectional_1[1][0]            
+__________________________________________________________________________________________________
+bidirectional_2 (Bidirectional) (None, 230, 600)     2162400     batch_normalization_1[0][0]      
+                                                                 batch_normalization_2[0][0]      
+__________________________________________________________________________________________________
+batch_normalization_3 (BatchNor (None, 230, 600)     2400        bidirectional_2[0][0]            
+__________________________________________________________________________________________________
+batch_normalization_4 (BatchNor (None, 230, 600)     2400        bidirectional_2[1][0]            
+__________________________________________________________________________________________________
+bidirectional_3 (Bidirectional) (None, 600)          2162400     batch_normalization_3[0][0]      
+                                                                 batch_normalization_4[0][0]      
+__________________________________________________________________________________________________
+batch_normalization_5 (BatchNor (None, 600)          2400        bidirectional_3[0][0]            
+__________________________________________________________________________________________________
+batch_normalization_6 (BatchNor (None, 600)          2400        bidirectional_3[1][0]            
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 1200)         0           batch_normalization_5[0][0]      
+                                                                 batch_normalization_6[0][0]      
+__________________________________________________________________________________________________
+dropout_1 (Dropout)             (None, 1200)         0           concatenate_1[0][0]              
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 600)          720600      dropout_1[0][0]                  
+__________________________________________________________________________________________________
+dropout_2 (Dropout)             (None, 600)          0           dense_2[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_7 (BatchNor (None, 600)          2400        dropout_2[0][0]                  
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 600)          360600      batch_normalization_7[0][0]      
+__________________________________________________________________________________________________
+dropout_3 (Dropout)             (None, 600)          0           dense_3[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_8 (BatchNor (None, 600)          2400        dropout_3[0][0]                  
+__________________________________________________________________________________________________
+dense_4 (Dense)                 (None, 600)          360600      batch_normalization_8[0][0]      
+__________________________________________________________________________________________________
+dropout_4 (Dropout)             (None, 600)          0           dense_4[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_9 (BatchNor (None, 600)          2400        dropout_4[0][0]                  
+__________________________________________________________________________________________________
+dense_5 (Dense)                 (None, 600)          360600      batch_normalization_9[0][0]      
+__________________________________________________________________________________________________
+dropout_5 (Dropout)             (None, 600)          0           dense_5[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_10 (BatchNo (None, 600)          2400        dropout_5[0][0]                  
+__________________________________________________________________________________________________
+dense_6 (Dense)                 (None, 3)            1803        batch_normalization_10[0][0]     
+==================================================================================================
+Total params: 17,693,703
+Trainable params: 17,681,703
+Non-trainable params: 12,000
+__________________________________________________________________________________________________
+Training
+test_snli.py:292: UserWarning: The `nb_epoch` argument in `fit` has been renamed `epochs`.
+  model.fit([train[0], train[1]], np.array(train[2]), batch_size=BATCH_SIZE, nb_epoch=MAX_EPOCHS, validation_data=([val[0], val[1]], np.array(val[2])), callbacks=callbacks)
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/math_ops.py:3066: to_int32 (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+2020-04-05 22:02:24.954328: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-04-05 22:02:24.958204: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2807930000 Hz
+2020-04-05 22:02:24.958471: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0xc161c20 executing computations on platform Host. Devices:
+2020-04-05 22:02:24.958510: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+Train on 9709 samples, validate on 2774 samples
+Epoch 1/10
+9709/9709 [==============================] - 2689s 277ms/step - loss: 1.2832 - accuracy: 0.4768 - val_loss: 0.9677 - val_accuracy: 0.6208
+Epoch 2/10
+9709/9709 [==============================] - 2697s 278ms/step - loss: 1.0735 - accuracy: 0.5435 - val_loss: 1.0907 - val_accuracy: 0.6208
+Epoch 3/10
+9709/9709 [==============================] - 2690s 277ms/step - loss: 0.9991 - accuracy: 0.5792 - val_loss: 0.9642 - val_accuracy: 0.6146
+Epoch 4/10
+9709/9709 [==============================] - 2683s 276ms/step - loss: 0.9336 - accuracy: 0.6076 - val_loss: 1.1345 - val_accuracy: 0.6233
+Epoch 5/10
+9709/9709 [==============================] - 2685s 277ms/step - loss: 0.8313 - accuracy: 0.6461 - val_loss: 1.1387 - val_accuracy: 0.6063
+Epoch 6/10
+9709/9709 [==============================] - 2683s 276ms/step - loss: 0.7135 - accuracy: 0.6909 - val_loss: 1.2126 - val_accuracy: 0.6255
+Epoch 7/10
+9709/9709 [==============================] - 2684s 276ms/step - loss: 0.6225 - accuracy: 0.7325 - val_loss: 1.2579 - val_accuracy: 0.5854
+1388/1388 [==============================] - 122s 88ms/step
+Test loss / test accuracy = 0.9780 / 0.6073
+
