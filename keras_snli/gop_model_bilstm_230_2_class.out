@@ -1,0 +1,125 @@
+Using TensorFlow backend.
+/usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/dtypes.py:526: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/dtypes.py:527: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/dtypes.py:528: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/dtypes.py:529: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/dtypes.py:530: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/usr/local/lib/python3.5/dist-packages/tensorflow/python/framework/dtypes.py:535: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+RNN / Embed / Sent = <function <lambda> at 0x7f8c40bd1f28>, 300, 300
+GloVe / Trainable Word Embeddings = False, True
+Build model...
+Vocab size = 33360
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/resource_variable_ops.py:435: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+test_snli.py:187: UserWarning: Update your `LSTM` call to the Keras 2 API: `LSTM(units=300, dropout=0.2, return_sequences=True, recurrent_dropout=0.2)`
+  RNN = lambda *args, **kwargs: Bidirectional(recurrent.LSTM(*args, **kwargs))
+test_snli.py:187: UserWarning: Update your `LSTM` call to the Keras 2 API: `LSTM(units=300, dropout=0.2, return_sequences=False, recurrent_dropout=0.2)`
+  RNN = lambda *args, **kwargs: Bidirectional(recurrent.LSTM(*args, **kwargs))
+test_snli.py:276: UserWarning: Update your `Dense` call to the Keras 2 API: `Dense(600, kernel_regularizer=<keras.reg..., activation="relu")`
+  joint = Dense(2 * SENT_HIDDEN_SIZE, activation=ACTIVATION, W_regularizer=l2(L2) if L2 else None)(joint)
+test_snli.py:282: UserWarning: Update your `Model` call to the Keras 2 API: `Model(outputs=Tensor("de..., inputs=[<tf.Tenso...)`
+  model = Model(input=[premise, hypothesis], output=pred)
+Model: "model_1"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            (None, 230)          0                                            
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 230)          0                                            
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 230, 300)     10008000    input_1[0][0]                    
+                                                                 input_2[0][0]                    
+__________________________________________________________________________________________________
+time_distributed_1 (TimeDistrib (None, 230, 300)     90300       embedding_1[0][0]                
+                                                                 embedding_1[1][0]                
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 230, 600)     1442400     time_distributed_1[0][0]         
+                                                                 time_distributed_1[1][0]         
+__________________________________________________________________________________________________
+batch_normalization_1 (BatchNor (None, 230, 600)     2400        bidirectional_1[0][0]            
+__________________________________________________________________________________________________
+batch_normalization_2 (BatchNor (None, 230, 600)     2400        bidirectional_1[1][0]            
+__________________________________________________________________________________________________
+bidirectional_2 (Bidirectional) (None, 230, 600)     2162400     batch_normalization_1[0][0]      
+                                                                 batch_normalization_2[0][0]      
+__________________________________________________________________________________________________
+batch_normalization_3 (BatchNor (None, 230, 600)     2400        bidirectional_2[0][0]            
+__________________________________________________________________________________________________
+batch_normalization_4 (BatchNor (None, 230, 600)     2400        bidirectional_2[1][0]            
+__________________________________________________________________________________________________
+bidirectional_3 (Bidirectional) (None, 600)          2162400     batch_normalization_3[0][0]      
+                                                                 batch_normalization_4[0][0]      
+__________________________________________________________________________________________________
+batch_normalization_5 (BatchNor (None, 600)          2400        bidirectional_3[0][0]            
+__________________________________________________________________________________________________
+batch_normalization_6 (BatchNor (None, 600)          2400        bidirectional_3[1][0]            
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 1200)         0           batch_normalization_5[0][0]      
+                                                                 batch_normalization_6[0][0]      
+__________________________________________________________________________________________________
+dropout_1 (Dropout)             (None, 1200)         0           concatenate_1[0][0]              
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 600)          720600      dropout_1[0][0]                  
+__________________________________________________________________________________________________
+dropout_2 (Dropout)             (None, 600)          0           dense_2[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_7 (BatchNor (None, 600)          2400        dropout_2[0][0]                  
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 600)          360600      batch_normalization_7[0][0]      
+__________________________________________________________________________________________________
+dropout_3 (Dropout)             (None, 600)          0           dense_3[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_8 (BatchNor (None, 600)          2400        dropout_3[0][0]                  
+__________________________________________________________________________________________________
+dense_4 (Dense)                 (None, 600)          360600      batch_normalization_8[0][0]      
+__________________________________________________________________________________________________
+dropout_4 (Dropout)             (None, 600)          0           dense_4[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_9 (BatchNor (None, 600)          2400        dropout_4[0][0]                  
+__________________________________________________________________________________________________
+dense_5 (Dense)                 (None, 600)          360600      batch_normalization_9[0][0]      
+__________________________________________________________________________________________________
+dropout_5 (Dropout)             (None, 600)          0           dense_5[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization_10 (BatchNo (None, 600)          2400        dropout_5[0][0]                  
+__________________________________________________________________________________________________
+dense_6 (Dense)                 (None, 2)            1202        batch_normalization_10[0][0]     
+==================================================================================================
+Total params: 17,693,102
+Trainable params: 17,681,102
+Non-trainable params: 12,000
+__________________________________________________________________________________________________
+Training
+test_snli.py:292: UserWarning: The `nb_epoch` argument in `fit` has been renamed `epochs`.
+  model.fit([train[0], train[1]], np.array(train[2]), batch_size=BATCH_SIZE, nb_epoch=MAX_EPOCHS, validation_data=([val[0], val[1]], np.array(val[2])), callbacks=callbacks)
+WARNING:tensorflow:From /usr/local/lib/python3.5/dist-packages/tensorflow/python/ops/math_ops.py:3066: to_int32 (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+2020-04-09 02:30:15.634966: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-04-09 02:30:15.781833: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2807935000 Hz
+2020-04-09 02:30:15.783122: I tensorflow/compiler/xla/service/service.cc:150] XLA service 0xb570cb0 executing computations on platform Host. Devices:
+2020-04-09 02:30:15.783182: I tensorflow/compiler/xla/service/service.cc:158]   StreamExecutor device (0): <undefined>, <undefined>
+Train on 9709 samples, validate on 2774 samples
+Epoch 1/10
+9709/9709 [==============================] - 2692s 277ms/step - loss: 0.7593 - accuracy: 0.6612 - val_loss: 0.5446 - val_accuracy: 0.7815
+Epoch 2/10
+9709/9709 [==============================] - 2678s 276ms/step - loss: 0.6013 - accuracy: 0.7323 - val_loss: 0.5280 - val_accuracy: 0.7815
+Epoch 3/10
+9709/9709 [==============================] - 2680s 276ms/step - loss: 0.5344 - accuracy: 0.7566 - val_loss: 0.4875 - val_accuracy: 0.7815
+Epoch 4/10
+9709/9709 [==============================] - 2681s 276ms/step - loss: 0.4664 - accuracy: 0.8068 - val_loss: 0.6328 - val_accuracy: 0.7942
+Epoch 5/10
+9709/9709 [==============================] - 2684s 276ms/step - loss: 0.3720 - accuracy: 0.8632 - val_loss: 1.1189 - val_accuracy: 0.7578
+Epoch 6/10
+9709/9709 [==============================] - 2724s 281ms/step - loss: 0.3092 - accuracy: 0.8975 - val_loss: 0.8219 - val_accuracy: 0.4221
+Epoch 7/10
+9709/9709 [==============================] - 2687s 277ms/step - loss: 0.2701 - accuracy: 0.9122 - val_loss: 0.6650 - val_accuracy: 0.7794
+1388/1388 [==============================] - 122s 88ms/step
+Test loss / test accuracy = 0.4616 / 0.7954
